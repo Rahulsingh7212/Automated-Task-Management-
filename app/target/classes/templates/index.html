@@ -1,0 +1,198 @@
+<! DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Reminder App</title>
+    <style>
+        * {
+            margin:  0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display:  flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        . logo {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .message {
+            color: #666;
+            font-size:  18px;
+            margin-bottom:  30px;
+        }
+
+        /* Statistics Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card.pending {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+        }
+
+        .stat-card.in-progress {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+        }
+
+        .stat-card.done {
+            background:  linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            margin-top:  5px
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background:  linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color:  white;
+        }
+
+        .btn-info {
+            background:  linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+        }
+
+        /* Footer */
+        . footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #888;
+            font-size: 14px;
+        }
+
+        . footer a {
+            color:  #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration:  underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">📋</div>
+    <h1>Task Reminder App</h1>
+    <p class="message" th:text="${message}">Welcome to the Task Reminder App! </p>
+
+    <!-- Statistics (shown if available) -->
+    <div class="stats-grid" th:if="${totalTasks != null}">
+        <div class="stat-card">
+            <div class="stat-number" th:text="${totalTasks}">0</div>
+            <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-number" th:text="${pendingTasks}">0</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card in-progress">
+            <div class="stat-number" th:text="${inProgressTasks}">0</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card done">
+            <div class="stat-number" th:text="${doneTasks}">0</div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" th:text="${overdueTasks}">0</div>
+            <div class="stat-label">Overdue</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" th:text="${todayTasks}">0</div>
+            <div class="stat-label">Due Today</div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="btn-group">
+        <a href="/tasks" class="btn btn-primary">📋 View All Tasks</a>
+        <a href="/tasks/add" class="btn btn-success">➕ Add New Task</a>
+        <a href="/dashboard" class="btn btn-info">📊 Dashboard</a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>Built with ❤️ by <strong th:text="${author != null} ? ${author} : 'Anurag'">Anurag</strong></p>
+        <p>Spring Boot + Thymeleaf + MySQL</p>
+    </div>
+</div>
+</body>
+</html>

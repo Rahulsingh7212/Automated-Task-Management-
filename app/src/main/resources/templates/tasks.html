@@ -1,0 +1,1815 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Tasks</title>
+    <link href="https://fonts.googleapis.com/css2? family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-top: 0;
+            padding-bottom: 15px;
+            padding-left: 10px;
+            padding-right:  10px;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width:  100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ==================== HEADER STYLES ==================== */
+        .main-header {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 0;
+            margin-bottom: 15px;
+            margin-left: -10px;
+            margin-right: -10px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.12);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: headerSlide 0.5s ease-out;
+        }
+
+        @keyframes headerSlide {
+            from {
+                opacity: 0;
+                transform:  translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform:  translateY(0);
+            }
+        }
+
+        .header-top {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 4px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items:  center;
+        }
+
+        .header-top-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-top-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .header-top-item i {
+            font-size: 10px;
+        }
+
+        .header-top-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-top-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight:  500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 8px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .header-top-link:hover {
+            background:  rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .header-main {
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .header-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            animation: logoFloat 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform:  translateY(-3px); }
+        }
+
+        .header-brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-brand-name {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip:  text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .header-brand-tagline {
+            font-size:  10px;
+            color: #888;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .header-nav {
+            display:  flex;
+            align-items:  center;
+            gap: 5px;
+        }
+
+        .header-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            color: #555;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow:  hidden;
+        }
+
+        .header-nav-link:hover {
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .header-nav-link:hover::before {
+            opacity: 1;
+        }
+
+        .header-nav-link i {
+            font-size: 12px;
+        }
+
+        .header-nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: #f5f7fa;
+            border-radius:  8px;
+            padding: 6px 12px;
+            gap: 6px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .header-search:focus-within {
+            background: white;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .header-search i {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .header-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 12px;
+            font-family: inherit;
+            width: 120px;
+            color: #333;
+        }
+
+        .header-search input::placeholder {
+            color: #aaa;
+        }
+
+        .header-notification {
+            position: relative;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f7fa;
+            border-radius: 8px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .header-notification:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .header-notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 2px solid white;
+            animation: badgePulse 2s infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 10px 5px 5px;
+            background: #f5f7fa;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .header-user:hover {
+            background: #eef0f5;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .header-user-avatar {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .header-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-user-name {
+            font-size:  12px;
+            font-weight:  600;
+            color: #333;
+        }
+
+        .header-user-role {
+            font-size: 9px;
+            color: #888;
+        }
+
+        .header-user-dropdown {
+            color: #888;
+            font-size: 10px;
+        }
+
+        /* Mobile Menu Button */
+        .header-mobile-toggle {
+            display: none;
+            width: 34px;
+            height: 34px;
+            align-items: center;
+            justify-content: center;
+            background: #f5f7fa;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            color: #555;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .header-mobile-toggle:hover {
+            background:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        /* Quick Stats in Header */
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 15px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-top: 1px solid #e8ecff;
+        }
+
+        .header-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow:  0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .header-stat-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .header-stat-icon.total {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            color:  #667eea;
+        }
+
+        .header-stat-icon.pending {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            color: #e65100;
+        }
+
+        .header-stat-icon.progress {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+        }
+
+        .header-stat-icon.done {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #1565c0;
+        }
+
+        .header-stat-icon.overdue {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: #c62828;
+        }
+
+        .header-stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-stat-number {
+            font-size: 14px;
+            font-weight:  800;
+            color: #333;
+            line-height: 1;
+        }
+
+        .header-stat-label {
+            font-size:  9px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* Responsive Header */
+        @media (max-width: 1200px) {
+            .header-main {
+                padding: 8px 15px;
+            }
+
+            .header-search {
+                display: none;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .header-nav {
+                display: none;
+            }
+
+            .header-mobile-toggle {
+                display: flex;
+            }
+
+            .header-stats {
+                overflow-x: auto;
+                padding: 8px 10px;
+            }
+
+            .header-stat {
+                flex-shrink: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-header {
+                margin-left: -10px;
+                margin-right:  -10px;
+            }
+
+            .header-top {
+                flex-direction: column;
+                gap: 5px;
+                padding: 6px 10px;
+            }
+
+            .header-main {
+                padding: 8px 10px;
+            }
+
+            .header-brand-name {
+                font-size: 16px;
+            }
+
+            .header-logo {
+                width: 35px;
+                height: 35px;
+                font-size: 18px;
+            }
+
+            .header-user {
+                padding: 4px;
+                border-radius: 50%;
+            }
+
+            .header-user-info,
+            .header-user-dropdown {
+                display: none;
+            }
+
+            .header-stats {
+                gap: 8px;
+            }
+
+            .header-stat {
+                padding: 4px 8px;
+            }
+
+            .header-stat-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+
+            .header-stat-number {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-top-left {
+                display: none;
+            }
+
+            .header-brand-tagline {
+                display: none;
+            }
+        }
+        /* ==================== END HEADER STYLES ==================== */
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow:
+                    0 15px 35px -12px rgba(0, 0, 0, 0.2),
+                    0 0 0 1px rgba(255, 255, 255, 0.1);
+            max-width: 100%;
+            margin: 0 auto;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity:  0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity:  1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom:  2px solid #f0f0f0;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight:  800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip:  text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h2::before {
+            content: '📋';
+            font-size: 24px;
+        }
+
+        .header-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius:  25px;
+            font-size:  12px;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Navigation Tabs */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            padding: 10px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 12px;
+            border: 1px solid #e8ecff;
+        }
+
+        .task-list-link {
+            color: #555;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 7px 12px;
+            border-radius:  8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: white;
+            border: 1px solid #e0e0e0;
+        }
+
+        .task-list-link:hover {
+            background:  linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .task-list-link i {
+            font-size: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight:  600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.3);
+            margin-left: auto;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #555;
+            border: 1px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom:  15px;
+            flex-wrap: wrap;
+            padding: 12px;
+            background: linear-gradient(135deg, #fff 0%, #fafbff 100%);
+            border:  1px solid #e8ecff;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-group label {
+            font-size: 11px;
+            color: #666;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .filter-group select,
+        .filter-group input[type="text"] {
+            padding: 7px 12px;
+            border: 1px solid #e0e5f0;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .filter-group select:focus,
+        .filter-group input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .filter-group select {
+            min-width: 100px;
+            cursor: pointer;
+        }
+
+        .filter-group input[type="text"] {
+            width: 140px;
+        }
+
+        .sort-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            margin-left: auto;
+            padding: 6px 10px;
+            background: #f8f9ff;
+            border-radius: 6px;
+        }
+
+        .sort-links span {
+            color: #888;
+            font-weight: 500;
+        }
+
+        .sort-links a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .sort-links a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Table Styles */
+        .table-container {
+            border-radius: 12px;
+            overflow-x: auto;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e8ecff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            min-width: 900px;
+            font-size: 12px;
+        }
+
+        th:last-child,
+        td:last-child {
+            min-width: 180px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 8px;
+            text-align:  left;
+            font-weight:  600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        th:first-child {
+            border-radius: 0;
+        }
+
+        th:last-child {
+            border-radius: 0;
+        }
+
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 12px;
+            color: #444;
+            vertical-align: middle;
+        }
+
+        tr {
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background:  linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+            transform: scale(1.002);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        td:nth-child(2) {
+            font-weight: 600;
+            color: #333;
+            max-width: 150px;
+        }
+
+        td:nth-child(3) {
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #666;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius:  25px;
+            font-size:  10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            color: #e65100;
+            box-shadow: 0 1px 4px rgba(230, 81, 0, 0.15);
+        }
+
+        .status-pending::before {
+            content: '⏳';
+            font-size:  10px;
+        }
+
+        .status-in-progress {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+            box-shadow: 0 1px 4px rgba(46, 125, 50, 0.15);
+        }
+
+        .status-in-progress::before {
+            content: '🔄';
+            font-size: 10px;
+        }
+
+        .status-done {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #1565c0;
+            box-shadow: 0 1px 4px rgba(21, 101, 192, 0.15);
+        }
+
+        .status-done::before {
+            content: '✅';
+            font-size: 10px;
+        }
+
+        /* Priority Badges */
+        .priority-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 25px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .priority-high {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: #c62828;
+            box-shadow:  0 1px 4px rgba(198, 40, 40, 0.15);
+            animation: pulse 2s infinite;
+        }
+
+        .priority-high::before {
+            content: '🔴';
+            font-size: 8px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .priority-medium {
+            background:  linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+            color: #f57c00;
+            box-shadow: 0 1px 4px rgba(245, 124, 0, 0.15);
+        }
+
+        .priority-medium::before {
+            content: '🟡';
+            font-size: 8px;
+        }
+
+        .priority-low {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #388e3c;
+            box-shadow: 0 1px 4px rgba(56, 142, 60, 0.15);
+        }
+
+        .priority-low::before {
+            content: '🟢';
+            font-size: 8px;
+        }
+
+        /* Date Columns */
+        .date-cell {
+            font-size: 11px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .date-cell i {
+            color: #667eea;
+            font-size: 10px;
+        }
+
+        /* Action Links */
+        .action-links {
+            white-space: nowrap;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            min-width: 160px;
+            justify-content: flex-start;
+        }
+
+        .action-links a {
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            white-space: nowrap;
+        }
+
+        .action-links a.view {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+        }
+
+        .action-links a.view:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.25);
+        }
+
+        .action-links a.edit {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            color: #1565c0;
+        }
+
+        .action-links a.edit:hover {
+            background: #1565c0;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(21, 101, 192, 0.25);
+        }
+
+        .action-links a.delete {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            color: #c62828;
+        }
+
+        .action-links a.delete:hover {
+            background: #c62828;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(198, 40, 40, 0.25);
+        }
+
+        .action-links a.mark-done {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            color: #2e7d32;
+        }
+
+        .action-links a.mark-done:hover {
+            background: #2e7d32;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.25);
+        }
+
+        /* No Tasks Message */
+        .no-tasks {
+            text-align: center;
+            padding: 50px 30px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+            border-radius: 16px;
+            border: 2px dashed #d0d5e0;
+        }
+
+        .no-tasks-icon {
+            font-size:  60px;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .no-tasks h3 {
+            font-size: 20px;
+            color: #444;
+            margin-bottom: 8px;
+        }
+
+        .no-tasks p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .no-tasks a.btn {
+            display: inline-flex;
+        }
+
+        /* ========== PAGINATION STYLES ========== */
+        .pagination-wrapper {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top:  1px solid #f0f0f0;
+        }
+
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .pagination-info {
+            font-size: 11px;
+            color: #555;
+            background: linear-gradient(135deg, #f8f9ff 0%, #fff 100%);
+            padding:  10px 14px;
+            border-radius:  8px;
+            border: 1px solid #e8ecff;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .pagination-info strong {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .page-size-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #555;
+            background: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #e8ecff;
+        }
+
+        .page-size-selector label {
+            font-weight: 600;
+        }
+
+        .page-size-selector select {
+            padding: 6px 10px;
+            border: 1px solid #e0e5f0;
+            border-radius:  6px;
+            font-size: 11px;
+            font-family: inherit;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .page-size-selector select:hover {
+            border-color: #667eea;
+        }
+
+        .page-size-selector select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .pagination-nav {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .pagination-nav a,
+        .pagination-nav span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            padding: 0 10px;
+            border: 1px solid #e0e5f0;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight:  600;
+            color: #555;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-nav a:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: transparent;
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .pagination-nav .active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color:  transparent;
+            color: white;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .pagination-nav .disabled {
+            background: #f5f5f5;
+            color: #bbb;
+            cursor: not-allowed;
+            pointer-events: none;
+            border-color: #eee;
+        }
+
+        .pagination-nav .ellipsis {
+            border: none;
+            background: transparent;
+            color: #888;
+            min-width: 24px;
+        }
+
+        /* ID Column Styling */
+        .id-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 11px;
+            box-shadow: 0 1px 4px rgba(102, 126, 234, 0.25);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 15px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0 5px 10px 5px;
+            }
+            .container {
+                padding: 12px 10px;
+                border-radius: 12px;
+            }
+            h2 {
+                font-size:  18px;
+            }
+            .page-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            .nav-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-primary {
+                margin-left: 0;
+                justify-content: center;
+            }
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group input[type="text"],
+            .filter-group select {
+                width: 100%;
+            }
+            .sort-links {
+                margin-left: 0;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .pagination-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .pagination-nav {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .pagination-info,
+            .page-size-selector {
+                justify-content: center;
+                text-align: center;
+            }
+            .action-links {
+                flex-direction: column;
+                gap: 3px;
+            }
+            .action-links a {
+                justify-content: center;
+            }
+        }
+        /* Loading Animation for buttons */
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5a6fd6;
+        }
+
+        /* ==================== FOOTER STYLES ==================== */
+        .footer {
+            margin-top: 20px;
+            padding:  15px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            box-shadow: 0 -2px 15px rgba(102, 126, 234, 0.2);
+        }
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .footer-logo {
+            font-size: 14px;
+            font-weight:  700;
+            color: white;
+        }
+        .footer-text {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .footer-center {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .footer-right {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        . footer-right strong {
+            color: white;
+            font-weight: 600;
+        }
+        /* Footer Responsive */
+        @media (max-width: 768px) {
+            .footer {
+                padding: 12px;
+                margin-top: 15px;
+            }
+            .footer-content {
+                flex-direction:  column;
+                text-align: center;
+                gap: 10px;
+            }
+            .footer-left {
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- ==================== HEADER SECTION ==================== -->
+<header class="main-header">
+    <!-- Top Bar -->
+    <div class="header-top">
+        <div class="header-top-left">
+            <span class="header-top-item">
+                <i class="fas fa-clock"></i>
+                <span id="currentDateTime">Loading...</span>
+            </span>
+            <span class="header-top-item">
+                <i class="fas fa-calendar-check"></i>
+                <span>Stay Organized, Stay Productive</span>
+            </span>
+        </div>
+        <div class="header-top-right">
+            <a href="#" class="header-top-link">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+    <!-- Main Header -->
+    <div class="header-main">
+        <a href="/tasks" class="header-brand">
+            <div class="header-logo">📋</div>
+            <div class="header-brand-text">
+                <span class="header-brand-name">Task Reminder</span>
+                <span class="header-brand-tagline">Automated Task Management System</span>
+            </div>
+        </a>
+        <nav class="header-nav">
+            <a href="/dashboard" class="header-nav-link">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="/tasks" class="header-nav-link active">
+                <i class="fas fa-tasks"></i> Tasks
+            </a>
+            <a href="/tasks/add" class="header-nav-link">
+                <i class="fas fa-plus-circle"></i> Add Task
+            </a>
+            <a href="/reports" class="header-nav-link">
+                <i class="fas fa-chart-bar"></i> Reports
+            </a>
+        </nav>
+        <div class="header-actions">
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Quick search... ">
+            </div>
+            <div class="header-notification">
+                <i class="fas fa-bell"></i>
+                <span class="header-notification-badge" th:text="${overdueCount != null ? overdueCount : '0'}">3</span>
+            </div>
+            <div class="header-user">
+                <div class="header-user-avatar">
+                    <span>AS</span>
+                </div>
+                <div class="header-user-info">
+                    <span class="header-user-name">Anurag Singh</span>
+                    <span class="header-user-role">Administrator</span>
+                </div>
+                <i class="fas fa-chevron-down header-user-dropdown"></i>
+            </div>
+            <button class="header-mobile-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </div>
+    <!-- Quick Stats Bar -->
+    <div class="header-stats">
+        <div class="header-stat">
+            <div class="header-stat-icon total">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div class="header-stat-info">
+                <span class="header-stat-number" th:text="${totalTaskCount != null ? totalTaskCount : '0'}">24</span>
+                <span class="header-stat-label">Total</span>
+            </div>
+        </div>
+        <div class="header-stat">
+            <div class="header-stat-icon pending">
+                <i class="fas fa-hourglass-half"></i>
+            </div>
+            <div class="header-stat-info">
+                <span class="header-stat-number" th:text="${pendingCount != null ? pendingCount : '0'}">8</span>
+                <span class="header-stat-label">Pending</span>
+            </div>
+        </div>
+        <div class="header-stat">
+            <div class="header-stat-icon progress">
+                <i class="fas fa-spinner"></i>
+            </div>
+            <div class="header-stat-info">
+                <span class="header-stat-number" th:text="${inProgressCount != null ? inProgressCount : '0'}">5</span>
+                <span class="header-stat-label">Progress</span>
+            </div>
+        </div>
+        <div class="header-stat">
+            <div class="header-stat-icon done">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="header-stat-info">
+                <span class="header-stat-number" th:text="${doneCount != null ? doneCount : '0'}">11</span>
+                <span class="header-stat-label">Done</span>
+            </div>
+        </div>
+        <div class="header-stat">
+            <div class="header-stat-icon overdue">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="header-stat-info">
+                <span class="header-stat-number" th:text="${overdueCount != null ? overdueCount : '0'}">3</span>
+                <span class="header-stat-label">Overdue</span>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- ==================== END HEADER SECTION ==================== -->
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h2 th:text="${pageTitle != null} ? ${pageTitle} : 'All Tasks'">All Tasks</h2>
+        <span class="header-badge" th:if="${totalElements != null}">
+            <i class="fas fa-tasks"></i> <span th:text="${totalElements}">0</span> Tasks
+        </span>
+    </div>
+    <!-- Navigation Actions -->
+    <div class="nav-actions">
+        <a href="/tasks" class="task-list-link">
+            <i class="fas fa-list"></i> All
+        </a>
+        <a href="/tasks/overdue" class="task-list-link">
+            <i class="fas fa-exclamation-triangle"></i> Overdue
+        </a>
+        <a href="/tasks/today" class="task-list-link">
+            <i class="fas fa-calendar-day"></i> Today
+        </a>
+        <a href="/tasks/upcoming" class="task-list-link">
+            <i class="fas fa-calendar-alt"></i> Upcoming
+        </a>
+        <a th:href="@{/tasks/add}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Task
+        </a>
+    </div>
+    <!-- Filter Section -->
+    <form th:action="@{/tasks}" method="get" class="filter-section">
+        <div class="filter-group">
+            <label for="status"><i class="fas fa-flag"></i> Status: </label>
+            <select name="status" id="status">
+                <option value="">All</option>
+                <option th:each="s:${statuses}"
+                        th:value="${s}"
+                        th:text="${s}"
+                        th:selected="${s == selectedStatus}">
+                </option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="priority"><i class="fas fa-exclamation-circle"></i> Priority:</label>
+            <select name="priority" id="priority">
+                <option value="">All</option>
+                <option th:each="p:${priorities}"
+                        th:value="${p}"
+                        th:text="${p}"
+                        th:selected="${p == selectedPriority}">
+                </option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="keyword"><i class="fas fa-search"></i> Search:</label>
+            <input type="text" name="keyword" id="keyword" placeholder="Search..." th:value="${keyword}">
+        </div>
+        <button type="submit" class="btn btn-secondary">
+            <i class="fas fa-filter"></i> Filter
+        </button>
+        <a th:href="@{/tasks}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Clear
+        </a>
+        <div class="sort-links">
+            <span><i class="fas fa-sort"></i></span>
+            <a th:href="@{/tasks(status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortBy='dueDate', size=${pageSize})}">Date</a> |
+            <a th:href="@{/tasks(status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortBy='priority', size=${pageSize})}">Priority</a> |
+            <a th:href="@{/tasks(status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortBy='title', size=${pageSize})}">Title</a>
+        </div>
+    </form>
+    <!-- Tasks Table -->
+    <div th:if="${tasks != null and !tasks. isEmpty()}" class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th><i class="fas fa-hashtag"></i> ID</th>
+                <th><i class="fas fa-heading"></i> Title</th>
+                <th><i class="fas fa-align-left"></i> Description</th>
+                <th><i class="fas fa-calendar"></i> Due</th>
+                <th><i class="fas fa-info-circle"></i> Status</th>
+                <th><i class="fas fa-exclamation"></i> Priority</th>
+                <th><i class="fas fa-clock"></i> Created</th>
+                <th><i class="fas fa-check-circle"></i> Completed</th>
+                <th><i class="fas fa-cog"></i> Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task :  ${tasks}">
+                <td>
+                    <span class="id-badge" th:text="${task.id}"></span>
+                </td>
+                <td th:text="${task.title}"></td>
+                <td th:text="${task.description}" th:title="${task.description}"></td>
+                <td>
+                    <span class="date-cell">
+                        <i class="far fa-calendar-alt"></i>
+                        <span th:text="${task.dueDate}"></span>
+                    </span>
+                </td>
+                <td>
+                    <span th:text="${task.status}"
+                          th:class="${task.status != null and task.status.toString() == 'PENDING'} ? 'status-badge status-pending' :
+                                    (${task.status != null and task.status.toString() == 'IN_PROGRESS'} ? 'status-badge status-in-progress' :
+                                    (${task.status != null and task.status.toString() == 'DONE'} ? 'status-badge status-done' :  'status-badge'))">
+                    </span>
+                </td>
+                <td>
+                    <span th:text="${task.priority}"
+                          th:class="${task.priority != null and task.priority.toString() == 'HIGH'} ? 'priority-badge priority-high' :
+                                    (${task.priority != null and task. priority.toString() == 'MEDIUM'} ? 'priority-badge priority-medium' :
+                                    (${task.priority != null and task.priority.toString() == 'LOW'} ? 'priority-badge priority-low' : 'priority-badge'))">
+                    </span>
+                </td>
+                <td>
+                    <span class="date-cell">
+                        <i class="far fa-clock"></i>
+                        <span th:text="${task.createdAt}"></span>
+                    </span>
+                </td>
+                <td>
+                    <span class="date-cell" th:if="${task.completedAt != null}">
+                        <i class="fas fa-check" style="color: #4caf50;"></i>
+                        <span th:text="${task.completedAt}"></span>
+                    </span>
+                    <span th:if="${task.completedAt == null}" style="color: #999;">—</span>
+                </td>
+                <td class="action-links">
+                    <a th:href="@{/tasks/view/{id}(id=${task.id})}" class="view" title="View">
+                        <i class="fas fa-eye"></i> View
+                    </a>
+                    <a th:href="@{/tasks/edit/{id}(id=${task.id})}" class="edit" title="Edit">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a th:href="@{/tasks/delete/{id}(id=${task.id})}" class="delete"
+                       onclick="return confirm('Delete this task?')" title="Delete">
+                        <i class="fas fa-trash"></i> Del
+                    </a>
+                    <a th:if="${task.status == null or task.status.toString() != 'DONE'}"
+                       th:href="@{/tasks/markdone/{id}(id=${task.id})}" class="mark-done" title="Done">
+                        <i class="fas fa-check"></i> Done
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- ==================== PAGINATION SECTION ==================== -->
+    <div th:if="${tasks != null and ! tasks.isEmpty()}" class="pagination-wrapper">
+        <div class="pagination-container">
+            <!-- Page Info -->
+            <div class="pagination-info">
+                <i class="fas fa-info-circle"></i>
+                <strong th:text="${startCount}">1</strong>-<strong th:text="${endCount}">10</strong>
+                of <strong th:text="${totalElements}">50</strong>
+                | Page <strong th:text="${currentPage + 1}">1</strong>/<strong th:text="${totalPages}">5</strong>
+            </div>
+            <!-- Page Size Selector -->
+            <div class="page-size-selector">
+                <label for="pageSizeSelect"><i class="fas fa-list-ol"></i></label>
+                <select id="pageSizeSelect" onchange="changePageSize(this.value)">
+                    <option value="5" th:selected="${pageSize == 5}">5</option>
+                    <option value="10" th:selected="${pageSize == 10}">10</option>
+                    <option value="25" th:selected="${pageSize == 25}">25</option>
+                    <option value="50" th:selected="${pageSize == 50}">50</option>
+                    <option value="100" th:selected="${pageSize == 100}">100</option>
+                </select>
+                <span>/page</span>
+            </div>
+            <!-- Pagination Navigation -->
+            <nav class="pagination-nav" th:if="${totalPages > 1}">
+                <!-- First Button -->
+                <a th:if="${currentPage > 0}"
+                   th:href="@{${baseUrl != null ? baseUrl : '/tasks'}(page=0, size=${pageSize}, status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}"
+                   title="First">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+                <span th:if="${currentPage == 0}" class="disabled"><i class="fas fa-angle-double-left"></i></span>
+                <!-- Previous Button -->
+                <a th:if="${currentPage > 0}"
+                   th:href="@{${baseUrl != null ?  baseUrl : '/tasks'}(page=${currentPage - 1}, size=${pageSize}, status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}"
+                   title="Previous">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+                <span th:if="${currentPage == 0}" class="disabled"><i class="fas fa-angle-left"></i></span>
+                <!-- Page Numbers -->
+                <th:block th:with="
+                    halfRange=2,
+                    startPage=${(currentPage - halfRange) < 0 ? 0 :  (currentPage - halfRange)},
+                    endPage=${(currentPage + halfRange) > (totalPages - 1) ? (totalPages - 1) : (currentPage + halfRange)}">
+                    <!-- First page if not in range -->
+                    <th:block th:if="${startPage > 0}">
+                        <a th:href="@{${baseUrl != null ? baseUrl : '/tasks'}(page=0, size=${pageSize}, status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}">1</a>
+                        <span th:if="${startPage > 1}" class="ellipsis">...</span>
+                    </th:block>
+                    <!-- Visible page numbers -->
+                    <th:block th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
+                        <span th:if="${pageNum == currentPage}" class="active" th:text="${pageNum + 1}">1</span>
+                        <a th:if="${pageNum != currentPage}"
+                           th:href="@{${baseUrl != null ? baseUrl : '/tasks'}(page=${pageNum}, size=${pageSize}, status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}"
+                           th:text="${pageNum + 1}">1</a>
+                </th:block>
+                <!-- Last page if not in range -->
+                <th:block th:if="${endPage < (totalPages - 1)}">
+                    <span th:if="${endPage < (totalPages - 2)}" class="ellipsis">...</span>
+                    <a th:href="@{${baseUrl != null ? baseUrl : '/tasks'}(page=${totalPages - 1}, size=${pageSize}, status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}"
+                       th:text="${totalPages}">10</a>
+                </th:block>
+                </th:block>
+                <!-- Next Button -->
+                <a th:if="${currentPage < totalPages - 1}"
+                   th:href="@{${baseUrl != null ? baseUrl : '/tasks'}(page=${currentPage + 1}, size=${pageSize}, status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}"
+                   title="Next">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+                <span th:if="${currentPage >= totalPages - 1}" class="disabled"><i class="fas fa-angle-right"></i></span>
+                <!-- Last Button -->
+                <a th:if="${currentPage < totalPages - 1}"
+                   th:href="@{${baseUrl != null ? baseUrl : '/tasks'}(page=${totalPages - 1}, size=${pageSize}, status=${selectedStatus}, priority=${selectedPriority}, keyword=${keyword}, sortField=${sortField}, sortDir=${sortDir})}"
+                   title="Last Page">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+                <span th:if="${currentPage >= totalPages - 1}" class="disabled"><i class="fas fa-angle-double-right"></i></span>
+            </nav>
+        </div>
+    </div>
+    <!-- ==================== END PAGINATION SECTION ==================== -->
+    <!-- No Tasks Message -->
+    <div th:if="${tasks == null or tasks.isEmpty()}" class="no-tasks">
+        <div class="no-tasks-icon">📝</div>
+        <h3>No Tasks Found</h3>
+        <p>Your task list is empty. Start by creating your first task!</p>
+        <a th:href="@{/tasks/add}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create Your First Task
+        </a>
+    </div>
+</div>
+<!-- JavaScript for Page Size Change -->
+<script th:inline="javascript">
+    function changePageSize(size) {
+        var baseUrl = /*[[${baseUrl}]]*/ '/tasks';
+        var status = /*[[${selectedStatus}]]*/ null;
+        var priority = /*[[${selectedPriority}]]*/ null;
+        var keyword = /*[[${keyword}]]*/ null;
+        var sortField = /*[[${sortField}]]*/ 'createdAt';
+        var sortDir = /*[[${sortDir}]]*/ 'desc';
+        var url = baseUrl + '?page=0&size=' + size;
+        url += '&sortField=' + sortField;
+        url += '&sortDir=' + sortDir;
+        if (status && status !== '') {
+            url += '&status=' + status;
+        }
+        if (priority && priority !== '') {
+            url += '&priority=' + priority;
+        }
+        if (keyword && keyword !== '') {
+            url += '&keyword=' + encodeURIComponent(keyword);
+        }
+        window.location.href = url;
+    }
+    // Add subtle animation to table rows on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                row.style.transition = 'all 0.4s ease';
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+            }, index * 50);
+        });
+    });
+</script>
+<!-- Header JavaScript -->
+<script>
+    // Update current date and time
+    function updateDateTime() {
+        const now = new Date();
+
+        const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+        const day = days[now.getDay()];
+        const date = now.getDate().toString().padStart(2, '0');
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+
+        document.getElementById('currentDateTime').textContent =
+            `${day}, ${date} ${month} ${year} | ${hours}:${minutes}:${seconds}`;
+    }
+
+    // Update time every minute
+    updateDateTime();
+    setInterval(updateDateTime, 1000);
+    // Mobile menu toggle
+    document.querySelector('.header-mobile-toggle').addEventListener('click', function() {
+        const nav = document.querySelector('.header-nav');
+        nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+        nav.style.position = 'absolute';
+        nav.style.top = '100%';
+        nav.style.left = '0';
+        nav.style.right = '0';
+        nav.style.background = 'white';
+        nav.style.padding = '15px';
+        nav.style.flexDirection = 'column';
+        nav.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+        nav.style.borderRadius = '0 0 16px 16px';
+    });
+    // Header scroll effect
+    window.addEventListener('scroll', function() {
+        const header = document.querySelector('.main-header');
+        if (window.scrollY > 50) {
+            header.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.2)';
+        } else {
+            header.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.15)';
+        }
+    });
+    // Quick search functionality
+    document.querySelector('.header-search input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const keyword = this.value.trim();
+            if (keyword) {
+                window.location.href = '/tasks?keyword=' + encodeURIComponent(keyword);
+            }
+        }
+    });
+</script>
+<!-- ==================== FOOTER SECTION ==================== -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-left">
+            <span class="footer-logo">📋 Task Reminder</span>
+            <span class="footer-text">Stay organized, stay productive</span>
+        </div>
+        <div class="footer-center">
+            <span>© 2026 Task Reminder App. All rights reserved.</span>
+        </div>
+        <div class="footer-right">
+            <span>Made with ❤️ by <strong>Anurag Singh</strong></span>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
