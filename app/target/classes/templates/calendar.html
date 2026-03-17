@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Calendar</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+
+    <style>
+        body { background-color: #f8f9fa; }
+        .calendar-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+        /* Custom header styling to match your app */
+        .fc-toolbar-title { font-size: 1.5rem !important; font-weight: bold; color: #333; }
+        .fc-button-primary { background-color: #0d6efd !important; border: none; }
+        .fc-button-primary:hover { background-color: #0b5ed7 !important; }
+        .fc-event { cursor: pointer; border: none; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/tasks"> <i class="fas fa-tasks me-2"></i>TaskReminder</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/tasks">List View</a></li>
+                <li class="nav-item"><a class="nav-link active" href="/tasks/calendar">Calendar View</a></li>
+            </ul>
+            <a href="/tasks/add" class="btn btn-primary ms-3"><i class="fas fa-plus"></i> New Task</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mb-5">
+
+    <div class="row text-center mb-4" th:if="${totalTaskCount != null}">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white p-2">
+                <h5>Total</h5>
+                <h3 th:text="${totalTaskCount}">0</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white p-2">
+                <h5>Done</h5>
+                <h3 th:text="${doneCount}">0</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark p-2">
+                <h5>Pending</h5>
+                <h3 th:text="${pendingCount}">0</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white p-2">
+                <h5>Overdue</h5>
+                <h3 th:text="${overdueCount}">0</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="calendar-card">
+        <div id='calendar'></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listWeek'
+            },
+            height: 700,
+
+            // ✅ Fetch events from your Spring Boot API
+            events: '/api/tasks/calendar',
+
+            // ✅ Tooltip/Popup on hover (optional)
+            eventMouseEnter: function(info) {
+                info.el.title = info.event.title;
+            }
+        });
+
+        calendar.render();
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

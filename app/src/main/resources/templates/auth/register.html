@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Task Reminder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .register-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-header .logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+
+        .register-header .logo i {
+            font-size: 32px;
+            color: white;
+        }
+
+        .register-header h2 {
+            color: #333;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .register-header p {
+            color: #888;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .form-floating {
+            margin-bottom: 15px;
+        }
+
+        .form-floating .form-control {
+            border-radius: 12px;
+            border: 2px solid #e8e8e8;
+            padding: 15px;
+            height: 55px;
+            font-size: 15px;
+        }
+
+        .form-floating .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            border-radius: 12px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .password-strength {
+            height: 4px;
+            border-radius: 2px;
+            margin-top: 5px;
+            transition: all 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="register-card">
+        <!-- Header -->
+        <div class="register-header">
+            <div class="logo">
+                <i class="fas fa-user-plus"></i>
+            </div>
+            <h2>Create Account</h2>
+            <p>Join Task Reminder to manage your tasks</p>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Success Message -->
+        <div th:if="${successMessage}" class="alert alert-success" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <span th:text="${successMessage}"></span>
+        </div>
+
+        <!-- Register Form -->
+        <form th:action="@{/auth/register}" method="post">
+
+            <!-- Full Name -->
+            <div class="form-floating">
+                <input type="text" class="form-control" id="fullName"
+                       name="fullName" placeholder="Full Name"
+                       th:value="${fullName}" required minlength="2">
+                <label for="fullName">
+                    <i class="fas fa-user me-2"></i>Full Name
+                </label>
+            </div>
+
+            <!-- Email -->
+            <div class="form-floating">
+                <input type="email" class="form-control" id="email"
+                       name="email" placeholder="Email"
+                       th:value="${email}" required>
+                <label for="email">
+                    <i class="fas fa-envelope me-2"></i>Email Address
+                </label>
+            </div>
+
+            <!-- Password -->
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password"
+                       name="password" placeholder="Password"
+                       required minlength="6">
+                <label for="password">
+                    <i class="fas fa-lock me-2"></i>Password (min 6 characters)
+                </label>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-floating">
+                <input type="password" class="form-control" id="confirmPassword"
+                       name="confirmPassword" placeholder="Confirm Password"
+                       required minlength="6">
+                <label for="confirmPassword">
+                    <i class="fas fa-lock me-2"></i>Confirm Password
+                </label>
+            </div>
+
+            <!-- Terms -->
+            <div class="form-check mb-3">
+                <input type="checkbox" class="form-check-input"
+                       id="terms" required>
+                <label class="form-check-label" for="terms" style="font-size: 13px;">
+                    I agree to the <a href="#" style="color: #667eea;">Terms & Conditions</a>
+                </label>
+            </div>
+
+            <!-- Register Button -->
+            <button type="submit" class="btn btn-register">
+                <i class="fas fa-user-plus me-2"></i>Create Account
+            </button>
+        </form>
+
+        <!-- Login Link -->
+        <div class="login-link">
+            Already have an account?
+            <a th:href="@{/auth/login}">Login here</a>
+        </div>
+    </div>
+</div>
+
+<!-- Password Match Validation -->
+<script>
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = this.value;
+
+        if (password !== confirmPassword) {
+            this.setCustomValidity('Passwords do not match');
+            this.style.borderColor = '#dc3545';
+        } else {
+            this.setCustomValidity('');
+            this.style.borderColor = '#28a745';
+        }
+    });
+</script>
+
+</body>
+</html>

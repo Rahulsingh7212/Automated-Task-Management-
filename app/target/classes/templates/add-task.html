@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom:  10px;
+        }
+
+        .form-group {
+            margin-bottom:  20px;
+        }
+
+        label {
+            display:  block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        label .required {
+            color: #cc0000;
+            margin-left: 3px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius:  4px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+
+        /* Button Styles */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor:  pointer;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-add {
+            background-color:  #4CAF50;
+            color:  white;
+        }
+
+        .btn-add:hover {
+            background-color:  #45a049;
+        }
+
+        .btn-cancel {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-cancel:hover {
+            background-color: #d0d0d0;
+        }
+
+        /* Back Link */
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration:  underline;
+        }
+
+        /* Status & Priority Indicators */
+        .status-indicator,
+        .priority-indicator {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .status-indicator span,
+        .priority-indicator span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dot {
+            width:  10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .dot-pending { background-color: #cc6600; }
+        .dot-in-progress { background-color: #9933cc; }
+        .dot-done { background-color: #009933; }
+        .dot-high { background-color:  #cc0000; }
+        .dot-medium { background-color:  #cc6600; }
+        .dot-low { background-color:  #009933; }
+
+        /* Form Header */
+        .form-header {
+            display: flex;
+            justify-content:  space-between;
+            align-items:  center;
+            margin-bottom: 20px;
+        }
+
+        .form-header h2 {
+            margin-bottom: 0;
+        }
+
+        .form-header a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .form-header a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="form-header">
+        <h2>Add New Task</h2>
+        <a href="/tasks">📋 Back to Task List</a>
+    </div>
+
+    <form action="/tasks/save" method="post">
+        <div class="form-group">
+            <label for="title">Title <span class="required">*</span></label>
+            <input type="text" id="title" name="title" placeholder="Enter task title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Enter task description (optional)"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="dueDate">Due Date</label>
+            <input type="date" id="dueDate" name="dueDate">
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status</label>
+            <select id="status" name="status">
+                <option value="PENDING" selected>PENDING</option>
+                <option value="IN_PROGRESS">IN_PROGRESS</option>
+                <option value="DONE">DONE</option>
+            </select>
+            <div class="status-indicator">
+                <span><span class="dot dot-pending"></span> PENDING</span>
+                <span><span class="dot dot-in-progress"></span> IN_PROGRESS</span>
+                <span><span class="dot dot-done"></span> DONE</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority">
+                <option value="LOW">LOW</option>
+                <option value="MEDIUM" selected>MEDIUM</option>
+                <option value="HIGH">HIGH</option>
+            </select>
+            <div class="priority-indicator">
+                <span><span class="dot dot-low"></span> LOW</span>
+                <span><span class="dot dot-medium"></span> MEDIUM</span>
+                <span><span class="dot dot-high"></span> HIGH</span>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-add">➕ Add Task</button>
+            <a href="/tasks" class="btn btn-cancel">Cancel</a>
+        </div>
+    </form>
+
+    <a href="/tasks" class="back-link">← Back to Task List</a>
+</div>
+</body>
+</html>
